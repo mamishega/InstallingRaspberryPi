@@ -43,6 +43,7 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 4. Click **Next**.
 
 ![Choosing the device](imager/1.png)
+
 *The **Device** step is selected in the sidebar. Here, "Raspberry Pi Zero" is chosen, which also covers the Zero W and Zero WH boards. Selecting the exact model matters because it tells the Imager which images and settings are compatible with your hardware, and it will filter the OS list on the next screen accordingly. Click the red **Next** button (bottom right) once your model is highlighted.*
 
 ### Step 2: Choose the OS
@@ -56,6 +57,7 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 3. From the submenu, select **Raspberry Pi OS Lite (32-bit)**, then click **Next**.
 
 ![Selecting Raspberry Pi OS Lite (32-bit)](imager/3.png)
+
 *"Raspberry Pi OS Lite (32-bit)" is a port of Debian with **no desktop environment** — just a command-line system. This keeps RAM and CPU usage low, which suits the Pi Zero's limited hardware.*
 
    > The Pi Zero's ARM11/ARM Cortex-A53 processor is 32-bit friendly, so the **32-bit** build is the standard recommended choice, even on the Zero 2 W.
@@ -67,6 +69,7 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 3. Select the correct microSD card, then click **Next**.
 
 ![Selecting the storage device](imager/4.png)
+
 *The Imager lists the removable/SD storage devices it can see (system drives are excluded by default via the **Exclude system drives** checkbox, bottom right, which prevents you from accidentally targeting your computer's own hard drive). Confirm the size shown (here, 14.5 GB) matches your microSD card.*
 
    > **Warning:** Double-check you have selected the correct drive. A later step will **erase all data** on the selected storage device.
@@ -82,6 +85,7 @@ After Storage, the wizard moves into the **Customisation** section. Here you set
 ### Hostname
 
 ![Setting the hostname](imager/5.png)
+
 *Enter a unique **hostname** for the Pi on your network (e.g. `pizero`). As the on-screen tip explains, it should contain only letters, numbers, and hyphens. You'll use this name later to connect over SSH (`ssh user@<hostname>.local`), so it's worth choosing something memorable.*
 
 > **What is a hostname?** A hostname is the human-readable name a device identifies itself by on a network — an alternative to remembering its numeric IP address (e.g. `192.168.1.42`), which can change each time the device reconnects. On most home/school networks, devices are also reachable via `<hostname>.local` (using mDNS/Bonjour) instead of typing the IP each time.
@@ -96,11 +100,13 @@ After Storage, the wizard moves into the **Customisation** section. Here you set
 ### Localisation
 
 ![Setting localisation](imager/6.png)
+
 *Choose your **capital city**, which auto-fills a sensible **time zone** and **keyboard layout** (here, Canberra/Australia sets `Australia/Sydney` and the `au` keyboard layout). Getting the time zone right matters for anything time-sensitive (logs, scheduled tasks); getting the keyboard layout right matters if you ever type on the Pi directly, since it affects which characters symbols like `@` and `"` produce.*
 
 ### User
 
 ![Creating a user account](imager/7.png)
+
 *Create a login **username** and **password** for the Pi. Do not leave this on the old default (`pi`/`raspberry`) — recent Raspberry Pi OS versions no longer ship a default account at all, so you must set one here or you won't be able to log in. The username must be lowercase and contain only letters, numbers, underscores, and hyphens.*
 
 ### Wi-Fi
@@ -118,6 +124,7 @@ After Storage, the wizard moves into the **Customisation** section. Here you set
 ### Raspberry Pi Connect
 
 ![Raspberry Pi Connect option](imager/10.png)
+
 *A newer option in Raspberry Pi Imager: **Raspberry Pi Connect** is Raspberry Pi's own cloud-based remote access service (screen sharing and shell access via a browser, even behind NAT/firewalls). It's optional and requires signing in with a Raspberry Pi account. For this lab, leave it **disabled** — standard SSH (configured above) is sufficient and doesn't depend on an external account.*
 
 ---
@@ -129,26 +136,31 @@ Once all Customisation pages are filled in, move to the **Writing** step.
 1. Review the **Write image** summary screen, which lists your chosen device, OS, storage, and the customisations that will be applied. Click **Write**.
 
 ![Write image summary](imager/11.png)
+
 *This confirmation screen recaps every choice you made: Device (Raspberry Pi Zero), Operating system (Raspberry Pi OS Lite 32-bit), Storage (the microSD card), and which customisations will be applied. Check it carefully before proceeding, since the next step is destructive.*
 
 2. Confirm you want to erase the storage device by clicking **I understand, erase and write**.
 
 ![Confirm erase warning](imager/12.png)
+
 *A safety prompt warns that all data on the selected card will be **permanently erased** and this **cannot be undone**. This is your last chance to cancel if you selected the wrong drive back in Step 3.*
 
 3. Wait while the Imager **writes** the image to the card.
 
 ![Writing in progress](imager/13.png)
+
 *A progress bar tracks the write (here, 20%). The message "do not disconnect the storage device" is important — pulling the card out mid-write will corrupt the image and you'll need to start over.*
 
 4. The Imager then automatically **verifies** the written data.
 
 ![Verifying written data](imager/14.png)
+
 *After writing, the Imager re-reads the card and checks it against the source image (here, 97% at 88 MB/s) to make sure no bytes were corrupted in transit. You can click **Skip verification** to save time, but it's recommended to let it finish, especially on a card you haven't used before.*
 
 5. When both steps complete, Raspberry Pi Imager confirms it is safe to remove the SD card.
 
 ![Write complete](imager/15.png)
+
 *The **Write complete!** screen recaps the device, OS, and storage used, and confirms which customisations were applied (Hostname, Localisation, User account — all ticked). It also notes the storage device was **already ejected automatically**, so it's safe to physically remove the card now. Click **Finish** to close the wizard.*
 
 ---
@@ -175,9 +187,10 @@ Because Wi-Fi and SSH were left disabled in Phase 4, the Pi needs a **monitor an
    ```
 
    ![Launching raspi-config](raspi-config/1.png)
+   
    *Run `sudo raspi-config` and enter your password when prompted for `sudo`.*
 
-2. This opens a blue-and-white text menu — navigate with the **arrow keys**, select with **Enter**, and go back with **Tab**/**Esc**.
+3. This opens a blue-and-white text menu — navigate with the **arrow keys**, select with **Enter**, and go back with **Tab**/**Esc**.
 
 ### Step 3: Set the Wireless LAN Country
 
@@ -282,6 +295,7 @@ Set this **before** connecting to Wi-Fi — an incorrect or unset country code c
    For example, connecting by hostname:
 
    ![Connecting via SSH using the hostname](raspi-config/14.png)
+   
    *`ssh user1@mohammed.local` from the computer's terminal.*
 
    > **The first time** you connect to a given Pi, SSH will warn that "the authenticity of host ... can't be established" and show a key fingerprint. This is normal — it's SSH's way of asking you to trust this device since it's never seen it before. Type **yes** to continue, then enter the password when prompted. SSH remembers this device afterwards and won't ask again unless the Pi's identity changes (e.g. after re-flashing the SD card).
@@ -289,6 +303,7 @@ Set this **before** connecting to Wi-Fi — an incorrect or unset country code c
    Or connecting by IP address:
 
    ![Connecting via SSH using the IP address](raspi-config/13.png)
+   
    *`ssh user1@192.168.20.34` from the computer's terminal, then enter the password when prompted.*
 
    > If `<hostname>.local` does not resolve, use the IP address instead. If that address has since changed (e.g. the Pi got a new DHCP lease after rebooting), run `ip a` again on the Pi (via monitor/keyboard) or check your router's device list for the current one.
