@@ -52,6 +52,7 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 2. Select **Raspberry Pi OS (other)** — this reveals additional, more specific OS builds.
 
 ![Selecting "Raspberry Pi OS (other)"](imager/2.png)
+
 *The default entries at the top ("Raspberry Pi OS (32-bit)" and "Legacy") include the full desktop environment, which is too heavy for a Pi Zero. Choosing **Raspberry Pi OS (other)** opens a submenu with lighter, more specific builds — including the Lite edition we need.*
 
 3. From the submenu, select **Raspberry Pi OS Lite (32-bit)**, then click **Next**.
