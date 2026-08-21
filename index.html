@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Installing Raspberry Pi OS Lite on a Raspberry Pi Zero</title>
+<meta name="description" content="A step-by-step lab guide for flashing Raspberry Pi OS Lite onto a Raspberry Pi Zero and configuring Wi-Fi, SSH, and remote access.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍓</text></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span> Pi Zero Lab Guide</div>
+  <div style="display:flex; align-items:center; gap:0.6rem;">
+    <a class="gh-link" href="https://github.com/mamishega/Installing-Raspberry-Pi-OS-Lite-on-a-Raspberry-Pi-Zero" target="_blank" rel="noopener">View on GitHub</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">☰</button>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar" id="sidebar">
+    <nav>
+      <span class="section-label">Guide</span>
+      <a href="#top">Objective</a>
+      <a href="#phase-1">Phase 1 — What You Need</a>
+      <a href="#phase-2">Phase 2 — Install Imager</a>
+      <a href="#phase-3">Phase 3 — Flashing the OS</a>
+      <a href="#phase-4">Phase 4 — Customisation</a>
+      <a href="#phase-5">Phase 5 — Write the Image</a>
+      <a href="#phase-6">Phase 6 — First Boot &amp; raspi-config</a>
+      <a href="#phase-7">Phase 7 — Connecting Remotely</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+
+      <span class="section-label">Phase 3 steps</span>
+      <a href="#p3-device">Choose the Device</a>
+      <a href="#p3-os">Choose the OS</a>
+      <a href="#p3-storage">Choose the Storage</a>
+
+      <span class="section-label">Phase 6 steps</span>
+      <a href="#p6-boot">Connect &amp; Boot</a>
+      <a href="#p6-raspiconfig">Launch raspi-config</a>
+      <a href="#p6-country">Wireless LAN Country</a>
+      <a href="#p6-wifi">Connect to Wi-Fi</a>
+      <a href="#p6-ssh">Enable SSH</a>
+      <a href="#p6-finish">Finish</a>
+    </nav>
+  </aside>
+
+  <main id="top">
+    <div class="hero">
+      <span class="kicker">Lab Guide</span>
+      <h1>Installing Raspberry Pi OS Lite on a Raspberry Pi Zero</h1>
+      <p class="lede">Flash Raspberry Pi OS Lite onto a microSD card for a Raspberry Pi Zero / Zero W / Zero 2 W using Raspberry Pi Imager, then configure Wi-Fi and SSH by hand with <code>raspi-config</code> so the Pi can be used headlessly from then on.</p>
+      <div class="meta">
+        <span>Raspberry Pi OS Lite (32-bit)</span>
+        <span>Raspberry Pi Imager</span>
+        <span>raspi-config</span>
+        <span>SSH</span>
+      </div>
+    </div>
+
+    <section class="phase" id="phase-1">
+      <h2>Phase 1: What You Need</h2>
+      <ul>
+        <li>A <strong>Raspberry Pi Zero</strong>, <strong>Zero W</strong>, or <strong>Zero 2 W</strong></li>
+        <li>A <strong>microSD card</strong> (8 GB minimum, 16 GB+ recommended)</li>
+        <li>A computer with an <strong>SD card reader</strong> (built-in or USB adapter)</li>
+        <li>A <strong>USB cable/adapter</strong> to power the Pi</li>
+        <li>A <strong>mini HDMI to HDMI adapter/cable</strong> and a monitor, plus a <strong>micro-USB OTG adapter</strong> and USB keyboard — needed once, for the initial <code>raspi-config</code> setup (see Phase 6)</li>
+        <li>Wi-Fi network details (SSID and password), if using a wireless model</li>
+        <li>Internet access on your computer to download the imaging tool</li>
+      </ul>
+      <div class="callout">
+        <span class="label">Why "Lite"?</span>
+        <p>Raspberry Pi OS Lite has no desktop environment. It is ideal for the Pi Zero because of its limited RAM and CPU, and it is well suited to headless projects (servers, IoT devices, sensors).</p>
+      </div>
+    </section>
+
+    <section class="phase" id="phase-2">
+      <h2>Phase 2: Install Raspberry Pi Imager</h2>
+      <ol>
+        <li>Go to the official Raspberry Pi software page and download <strong>Raspberry Pi Imager</strong> for your operating system (Windows, macOS, or Linux).</li>
+        <li>Install and open the application.</li>
+      </ol>
+      <div class="callout">
+        <p>Raspberry Pi Imager walks you through the whole process as a step-by-step wizard, shown as a list on the left (<strong>Device → OS → Storage → Customisation → Writing → Done</strong>). The current step is always highlighted in red.</p>
+      </div>
+    </section>
+
+    <section class="phase" id="phase-3">
+      <h2>Phase 3: Flashing the OS</h2>
+
+      <h3 id="p3-device"><span class="step-num">1</span>Choose the Device</h3>
+      <ol>
+        <li>Open <strong>Raspberry Pi Imager</strong>.</li>
+        <li>Click <strong>Choose Device</strong>.</li>
+        <li>Select your exact model from the list:
+          <ul>
+            <li><strong>Raspberry Pi Zero</strong> (also covers Zero W and Zero WH)</li>
+            <li><strong>Raspberry Pi Zero 2 W</strong></li>
+          </ul>
+        </li>
+        <li>Click <strong>Next</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/1.png" alt="Raspberry Pi Imager device selection screen with Raspberry Pi Zero highlighted">
+        <figcaption>
+          <span class="cap-title">Choosing the device</span>
+          The <strong>Device</strong> step is selected in the sidebar. Here, "Raspberry Pi Zero" is chosen, which also covers the Zero W and Zero WH boards. Selecting the exact model matters because it tells the Imager which images and settings are compatible with your hardware, and it will filter the OS list on the next screen accordingly. Click the red <strong>Next</strong> button (bottom right) once your model is highlighted.
+        </figcaption>
+      </figure>
+
+      <h3 id="p3-os"><span class="step-num">2</span>Choose the OS</h3>
+      <ol>
+        <li>Click <strong>Choose OS</strong>.</li>
+        <li>Select <strong>Raspberry Pi OS (other)</strong> — this reveals additional, more specific OS builds.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/2.png" alt="Raspberry Pi Imager OS selection screen with Raspberry Pi OS (other) highlighted">
+        <figcaption>
+          <span class="cap-title">Selecting "Raspberry Pi OS (other)"</span>
+          The default entries at the top ("Raspberry Pi OS (32-bit)" and "Legacy") include the full desktop environment, which is too heavy for a Pi Zero. Choosing <strong>Raspberry Pi OS (other)</strong> opens a submenu with lighter, more specific builds — including the Lite edition we need.
+        </figcaption>
+      </figure>
+      <ol start="3">
+        <li>From the submenu, select <strong>Raspberry Pi OS Lite (32-bit)</strong>, then click <strong>Next</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/3.png" alt="Raspberry Pi Imager OS submenu with Raspberry Pi OS Lite (32-bit) highlighted">
+        <figcaption>
+          <span class="cap-title">Selecting Raspberry Pi OS Lite (32-bit)</span>
+          "Raspberry Pi OS Lite (32-bit)" is a port of Debian with <strong>no desktop environment</strong> — just a command-line system. This keeps RAM and CPU usage low, which suits the Pi Zero's limited hardware.
+        </figcaption>
+      </figure>
+      <div class="callout">
+        <p>The Pi Zero's ARM11/ARM Cortex-A53 processor is 32-bit friendly, so the <strong>32-bit</strong> build is the standard recommended choice, even on the Zero 2 W.</p>
+      </div>
+
+      <h3 id="p3-storage"><span class="step-num">3</span>Choose the Storage</h3>
+      <ol>
+        <li>Insert the microSD card into your computer.</li>
+        <li>Click <strong>Choose Storage</strong>.</li>
+        <li>Select the correct microSD card, then click <strong>Next</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/4.png" alt="Raspberry Pi Imager storage selection screen showing the microSD card">
+        <figcaption>
+          <span class="cap-title">Selecting the storage device</span>
+          The Imager lists the removable/SD storage devices it can see (system drives are excluded by default via the <strong>Exclude system drives</strong> checkbox, bottom right, which prevents you from accidentally targeting your computer's own hard drive). Confirm the size shown (here, 14.5 GB) matches your microSD card.
+        </figcaption>
+      </figure>
+      <div class="callout warning">
+        <span class="label">Warning</span>
+        <p>Double-check you have selected the correct drive. A later step will <strong>erase all data</strong> on the selected storage device.</p>
+      </div>
+    </section>
+
+    <section class="phase" id="phase-4">
+      <h2>Phase 4: Customisation — Hostname, Localisation &amp; User Account</h2>
+      <p class="phase-sub">After Storage, the wizard moves into the <strong>Customisation</strong> section. Here you set the Pi's hostname, locale, and login so it's ready to log into from the very first boot. Each item below is its own page in the sidebar, but they're all part of the same <strong>Customisation</strong> step.</p>
+
+      <h3>Hostname</h3>
+      <figure class="shot">
+        <img src="imager/5.png" alt="Raspberry Pi Imager hostname customisation screen">
+        <figcaption>
+          <span class="cap-title">Setting the hostname</span>
+          Enter a unique <strong>hostname</strong> for the Pi on your network (e.g. <code>pizero</code>). As the on-screen tip explains, it should contain only letters, numbers, and hyphens. You'll use this name later to connect over SSH (<code>ssh user@&lt;hostname&gt;.local</code>), so it's worth choosing something memorable.
+        </figcaption>
+      </figure>
+      <div class="callout">
+        <span class="label">What is a hostname?</span>
+        <p>A hostname is the human-readable name a device identifies itself by on a network — an alternative to remembering its numeric IP address (e.g. <code>192.168.1.42</code>), which can change each time the device reconnects. On most home/school networks, devices are also reachable via <code>&lt;hostname&gt;.local</code> (using mDNS/Bonjour) instead of typing the IP each time.</p>
+        <p><strong>Where you'll use it:</strong></p>
+        <ul>
+          <li><strong>Connecting over SSH</strong> from your computer: <code>ssh &lt;username&gt;@&lt;hostname&gt;.local</code> (see Phase 7).</li>
+          <li><strong>Identifying the Pi</strong> on your router's device list or network scanner, especially useful when you have several Pis on the same network — each should get its own unique hostname.</li>
+          <li><strong>The terminal prompt</strong> on the Pi itself shows the hostname (e.g. <code>pi@pizero:~$</code>), which is handy for confirming which device you're logged into when working with multiple Pis at once.</li>
+        </ul>
+        <p>Choose something distinct from the defaults other students in the room might use (e.g. include your name or student ID) to avoid two Pis claiming the same hostname on the shared network, which can cause <code>&lt;hostname&gt;.local</code> to resolve to the wrong device.</p>
+      </div>
+
+      <h3>Localisation</h3>
+      <figure class="shot">
+        <img src="imager/6.png" alt="Raspberry Pi Imager localisation customisation screen">
+        <figcaption>
+          <span class="cap-title">Setting localisation</span>
+          Choose your <strong>capital city</strong>, which auto-fills a sensible <strong>time zone</strong> and <strong>keyboard layout</strong> (here, Canberra/Australia sets <code>Australia/Sydney</code> and the <code>au</code> keyboard layout). Getting the time zone right matters for anything time-sensitive (logs, scheduled tasks); getting the keyboard layout right matters if you ever type on the Pi directly, since it affects which characters symbols like <code>@</code> and <code>"</code> produce.
+        </figcaption>
+      </figure>
+
+      <h3>User</h3>
+      <figure class="shot">
+        <img src="imager/7.png" alt="Raspberry Pi Imager user account customisation screen">
+        <figcaption>
+          <span class="cap-title">Creating a user account</span>
+          Create a login <strong>username</strong> and <strong>password</strong> for the Pi. Do not leave this on the old default (<code>pi</code>/<code>raspberry</code>) — recent Raspberry Pi OS versions no longer ship a default account at all, so you must set one here or you won't be able to log in. The username must be lowercase and contain only letters, numbers, underscores, and hyphens.
+        </figcaption>
+      </figure>
+
+      <h3>Wi-Fi</h3>
+      <div class="callout">
+        <span class="label">Note</span>
+        <p>Wi-Fi and SSH are deliberately left disabled in this step — you'll enable them yourself afterwards using <code>raspi-config</code> (Phase 6), as practice with headless administration from the command line. Until then, the Pi needs a monitor and keyboard connected directly (see Phase 6).</p>
+      </div>
+      <figure class="shot">
+        <img src="imager/8.png" alt="Raspberry Pi Imager Wi-Fi customisation screen, left blank">
+        <figcaption>
+          <span class="cap-title">Configuring Wi-Fi</span>
+          Leave this page blank — do not enter your SSID/password here. You'll configure Wi-Fi in Phase 6 via <code>raspi-config</code>.
+        </figcaption>
+      </figure>
+
+      <h3>Remote Access (SSH)</h3>
+      <figure class="shot">
+        <img src="imager/9.png" alt="Raspberry Pi Imager SSH customisation screen, left disabled">
+        <figcaption>
+          <span class="cap-title">Enabling SSH</span>
+          Leave <strong>Enable SSH</strong> off here too — you'll enable it in Phase 6 via <code>raspi-config</code>.
+        </figcaption>
+      </figure>
+
+      <h3>Raspberry Pi Connect</h3>
+      <figure class="shot">
+        <img src="imager/10.png" alt="Raspberry Pi Imager Raspberry Pi Connect customisation screen">
+        <figcaption>
+          <span class="cap-title">Raspberry Pi Connect option</span>
+          A newer option in Raspberry Pi Imager: <strong>Raspberry Pi Connect</strong> is Raspberry Pi's own cloud-based remote access service (screen sharing and shell access via a browser, even behind NAT/firewalls). It's optional and requires signing in with a Raspberry Pi account. For this lab, leave it <strong>disabled</strong> — standard SSH (configured above) is sufficient and doesn't depend on an external account.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="phase" id="phase-5">
+      <h2>Phase 5: Write the Image</h2>
+      <p class="phase-sub">Once all Customisation pages are filled in, move to the <strong>Writing</strong> step.</p>
+
+      <ol>
+        <li>Review the <strong>Write image</strong> summary screen, which lists your chosen device, OS, storage, and the customisations that will be applied. Click <strong>Write</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/11.png" alt="Raspberry Pi Imager write image summary screen">
+        <figcaption>
+          <span class="cap-title">Write image summary</span>
+          This confirmation screen recaps every choice you made: Device (Raspberry Pi Zero), Operating system (Raspberry Pi OS Lite 32-bit), Storage (the microSD card), and which customisations will be applied. Check it carefully before proceeding, since the next step is destructive.
+        </figcaption>
+      </figure>
+
+      <ol start="2">
+        <li>Confirm you want to erase the storage device by clicking <strong>I understand, erase and write</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/12.png" alt="Raspberry Pi Imager erase confirmation warning">
+        <figcaption>
+          <span class="cap-title">Confirm erase warning</span>
+          A safety prompt warns that all data on the selected card will be <strong>permanently erased</strong> and this <strong>cannot be undone</strong>. This is your last chance to cancel if you selected the wrong drive back in Step 3.
+        </figcaption>
+      </figure>
+
+      <ol start="3">
+        <li>Wait while the Imager <strong>writes</strong> the image to the card.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/13.png" alt="Raspberry Pi Imager writing progress bar">
+        <figcaption>
+          <span class="cap-title">Writing in progress</span>
+          A progress bar tracks the write (here, 20%). The message "do not disconnect the storage device" is important — pulling the card out mid-write will corrupt the image and you'll need to start over.
+        </figcaption>
+      </figure>
+
+      <ol start="4">
+        <li>The Imager then automatically <strong>verifies</strong> the written data.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/14.png" alt="Raspberry Pi Imager verifying progress bar">
+        <figcaption>
+          <span class="cap-title">Verifying written data</span>
+          After writing, the Imager re-reads the card and checks it against the source image (here, 97% at 88 MB/s) to make sure no bytes were corrupted in transit. You can click <strong>Skip verification</strong> to save time, but it's recommended to let it finish, especially on a card you haven't used before.
+        </figcaption>
+      </figure>
+
+      <ol start="5">
+        <li>When both steps complete, Raspberry Pi Imager confirms it is safe to remove the SD card.</li>
+      </ol>
+      <figure class="shot">
+        <img src="imager/15.png" alt="Raspberry Pi Imager write complete screen">
+        <figcaption>
+          <span class="cap-title">Write complete</span>
+          The <strong>Write complete!</strong> screen recaps the device, OS, and storage used, and confirms which customisations were applied (Hostname, Localisation, User account — all ticked). It also notes the storage device was <strong>already ejected automatically</strong>, so it's safe to physically remove the card now. Click <strong>Finish</strong> to close the wizard.
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="phase" id="phase-6">
+      <h2>Phase 6: First Boot &amp; Initial Configuration (raspi-config)</h2>
+      <p class="phase-sub">Because Wi-Fi and SSH were left disabled in Phase 4, the Pi needs a <strong>monitor and keyboard connected directly</strong> for this one-time setup. Once Wi-Fi and SSH are enabled below, you won't need them again.</p>
+
+      <h3 id="p6-boot"><span class="step-num">1</span>Connect and Boot</h3>
+      <ol>
+        <li>Remove the microSD card from your computer and insert it into the <strong>microSD slot</strong> on the Raspberry Pi Zero.</li>
+        <li>Connect the monitor to the Pi Zero's <strong>mini HDMI port</strong> (via your adapter/cable).</li>
+        <li>Connect the USB keyboard to the Pi Zero's <strong>USB port</strong> (labelled <code>USB</code>, not <code>PWR</code>) via your micro-USB OTG adapter.</li>
+        <li>Connect a <strong>USB power cable</strong> to the Pi Zero's <strong>USB power port</strong> (usually labelled <code>PWR</code>, not <code>USB</code>, on the earlier Zero models).</li>
+        <li>Wait 1–2 minutes for the first boot to complete (it will resize the filesystem in the background — you may see some log messages scroll past).</li>
+        <li>At the <code>login:</code> prompt, log in with the <strong>username</strong> and <strong>password</strong> you set in Phase 4.</li>
+      </ol>
+
+      <h3 id="p6-raspiconfig"><span class="step-num">2</span>Launch raspi-config</h3>
+      <ol>
+        <li>At the command prompt, run:
+          <pre><code>sudo raspi-config</code></pre>
+        </li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/1.png" alt="Launching raspi-config in the terminal">
+        <figcaption>Run <code>sudo raspi-config</code> and enter your password when prompted for <code>sudo</code>.</figcaption>
+      </figure>
+      <ol start="2">
+        <li>This opens a blue-and-white text menu — navigate with the <strong>arrow keys</strong>, select with <strong>Enter</strong>, and go back with <strong>Tab</strong>/<strong>Esc</strong>.</li>
+      </ol>
+
+      <h3 id="p6-country"><span class="step-num">3</span>Set the Wireless LAN Country</h3>
+      <div class="callout">
+        <p>Set this <strong>before</strong> connecting to Wi-Fi — an incorrect or unset country code can prevent the Wi-Fi radio from connecting at all, so doing this first avoids a confusing failure in the next step.</p>
+      </div>
+      <ol>
+        <li>From the main menu, select <strong>5 Localisation Options</strong>.</li>
+        <li>Select <strong>L4 WLAN Country</strong>.</li>
+        <li>Choose your country from the list (e.g. <strong>AU Australia</strong>) and select <strong>Ok</strong>.</li>
+      </ol>
+
+      <h3 id="p6-wifi"><span class="step-num">4</span>Connect to Wi-Fi</h3>
+      <ol>
+        <li>Back at the main menu, select <strong>1 System Options</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/2.png" alt="raspi-config main menu with System Options highlighted">
+        <figcaption>Main menu — System Options</figcaption>
+      </figure>
+      <ol start="2">
+        <li>Select <strong>S1 Wireless LAN</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/3.png" alt="raspi-config System Options menu with S1 Wireless LAN highlighted">
+        <figcaption>System Options — S1 Wireless LAN</figcaption>
+      </figure>
+      <ol start="3">
+        <li>Enter your network's <strong>SSID</strong> and select <strong>&lt;Ok&gt;</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/4.png" alt="raspi-config prompt for entering the Wi-Fi SSID">
+        <figcaption>Entering the SSID</figcaption>
+      </figure>
+      <ol start="4">
+        <li>Enter your Wi-Fi <strong>passphrase</strong> and select <strong>&lt;Ok&gt;</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/5.png" alt="raspi-config prompt for entering the Wi-Fi passphrase">
+        <figcaption>Entering the Wi-Fi passphrase</figcaption>
+      </figure>
+      <div class="callout">
+        <p>This step applies to the <strong>Zero W</strong> and <strong>Zero 2 W</strong> only — the original Pi Zero has no wireless radio and must stay on this monitor/keyboard connection or use a USB Ethernet/OTG network adapter instead.</p>
+      </div>
+      <div class="callout warning">
+        <span class="label">If you get the error "There was an error running option S1 Wireless LAN"</span>
+        <p>Exit out of <code>raspi-config</code>, then use <code>nmtui</code> instead:</p>
+        <pre><code>sudo nmtui</code></pre>
+        <ol>
+          <li>Select <strong>Radio</strong> and make sure <strong>Wi-Fi</strong> is enabled.</li>
+          <li>Back at the main menu, select <strong>Activate a connection</strong>.</li>
+          <li>Choose your Wi-Fi network (SSID) from the list and select <strong>Activate</strong>.</li>
+          <li>Enter your Wi-Fi password when prompted, then select <strong>OK</strong>.</li>
+          <li>Select <strong>Back</strong>, then <strong>Quit</strong> to exit <code>nmtui</code>.</li>
+        </ol>
+      </div>
+
+      <h3 id="p6-ssh"><span class="step-num">5</span>Enable SSH</h3>
+      <ol>
+        <li>Back at the main menu, select <strong>3 Interface Options</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/6.png" alt="raspi-config main menu with Interface Options highlighted">
+        <figcaption>Main menu — Interface Options</figcaption>
+      </figure>
+      <ol start="2">
+        <li>Select <strong>I1 SSH</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/7.png" alt="raspi-config Interface Options menu with I1 SSH highlighted">
+        <figcaption>Interface Options — I1 SSH</figcaption>
+      </figure>
+      <ol start="3">
+        <li>Choose <strong>&lt;Yes&gt;</strong> to enable the SSH server.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/8.png" alt="raspi-config prompt confirming SSH should be enabled">
+        <figcaption>Confirming SSH should be enabled</figcaption>
+      </figure>
+      <ol start="4">
+        <li>You'll see a confirmation that SSH is enabled — select <strong>&lt;Ok&gt;</strong>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/9.png" alt="raspi-config confirmation that the SSH server is enabled">
+        <figcaption>SSH server enabled confirmation</figcaption>
+      </figure>
+
+      <h3 id="p6-finish"><span class="step-num">6</span>Finish</h3>
+      <ol>
+        <li>Use <strong>Tab</strong>/arrow keys to highlight <strong>&lt;Finish&gt;</strong> and press <strong>Enter</strong> to exit <code>raspi-config</code>.</li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/10.png" alt="raspi-config main menu with Finish highlighted">
+        <figcaption>Main menu — Finish</figcaption>
+      </figure>
+    </section>
+
+    <section class="phase" id="phase-7">
+      <h2>Phase 7: Connecting Remotely</h2>
+      <ol>
+        <li>Before disconnecting the monitor and keyboard, find the Pi's <strong>IP address</strong> — back at the command prompt, run:
+          <pre><code>ip a</code></pre>
+          Look for the <code>inet</code> address under the <code>wlan0</code> section (e.g. <code>192.168.20.34</code>) and note it down. Keep this handy as a fallback in case <code>&lt;hostname&gt;.local</code> doesn't resolve on your network.
+        </li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/11.png" alt="Terminal output of the ip a command showing the wlan0 IP address">
+        <figcaption>Checking the IP address with <code>ip a</code></figcaption>
+      </figure>
+
+      <ol start="2">
+        <li>Reboot the Pi to make sure the new Wi-Fi and SSH settings take effect cleanly:
+          <pre><code>sudo reboot</code></pre>
+        </li>
+      </ol>
+      <figure class="shot">
+        <img src="raspi-config/12.png" alt="Terminal running sudo reboot">
+        <figcaption>Rebooting the Pi</figcaption>
+      </figure>
+      <p>Once it reboots, you can disconnect the monitor and keyboard — the Pi is ready for headless use.</p>
+
+      <ol start="3">
+        <li>From your computer, connect via SSH using either the hostname or the IP address you noted in Step 1:
+          <pre><code>ssh &lt;username&gt;@&lt;hostname&gt;.local</code></pre>
+          or
+          <pre><code>ssh &lt;username&gt;@&lt;ip-address&gt;</code></pre>
+        </li>
+      </ol>
+
+      <p>For example, connecting by hostname:</p>
+      <figure class="shot">
+        <img src="raspi-config/14.png" alt="Terminal SSH session connecting via the Pi's hostname">
+        <figcaption><code>ssh user1@mohammed.local</code> from the computer's terminal.</figcaption>
+      </figure>
+      <div class="callout">
+        <span class="label">First-time connection</span>
+        <p>The first time you connect to a given Pi, SSH will warn that "the authenticity of host ... can't be established" and show a key fingerprint. This is normal — it's SSH's way of asking you to trust this device since it's never seen it before. Type <strong>yes</strong> to continue, then enter the password when prompted. SSH remembers this device afterwards and won't ask again unless the Pi's identity changes (e.g. after re-flashing the SD card).</p>
+      </div>
+
+      <p>Or connecting by IP address:</p>
+      <figure class="shot">
+        <img src="raspi-config/13.png" alt="Terminal SSH session connecting via the Pi's IP address">
+        <figcaption><code>ssh user1@192.168.20.34</code> from the computer's terminal, then enter the password when prompted.</figcaption>
+      </figure>
+      <div class="callout">
+        <p>If <code>&lt;hostname&gt;.local</code> does not resolve, use the IP address instead. If that address has since changed (e.g. the Pi got a new DHCP lease after rebooting), run <code>ip a</code> again on the Pi (via monitor/keyboard) or check your router's device list for the current one.</p>
+      </div>
+    </section>
+
+    <section class="phase" id="troubleshooting">
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li><strong>Pi does not boot / no LED activity:</strong> Re-check the image was written successfully; try re-flashing.</li>
+        <li><strong>No display on monitor:</strong> Confirm you're using the <strong>mini HDMI</strong> port (not the power port) and that the adapter/cable is fully seated; try reconnecting power after the monitor is attached.</li>
+        <li><strong>Keyboard not responding:</strong> Confirm it's connected via the OTG adapter to the <strong>USB</strong> data port (not the <code>PWR</code> port), and try a powered USB hub if the keyboard draws too much current for the Pi to supply.</li>
+        <li><strong>Can't connect over Wi-Fi:</strong> Confirm the SSID/password and <strong>Wireless LAN country</strong> were set correctly in Phase 6, and that you're using the correct 2.4 GHz network (the Pi Zero W/Zero 2 W do not support 5 GHz).</li>
+        <li><strong>"There was an error running option S1 Wireless LAN" in raspi-config:</strong> Exit <code>raspi-config</code> and use <code>sudo nmtui</code> instead — select <strong>Radio</strong> and enable Wi-Fi, then select <strong>Activate a connection</strong> and choose your network (see Phase 6, Step 4).</li>
+        <li><strong>SSH connection refused:</strong> Confirm SSH was enabled in Phase 6 (<strong>raspi-config → Interface Options → I1 SSH</strong>), and allow extra time after reboot.</li>
+        <li><strong>Hostname doesn't resolve:</strong> Not all networks support <code>.local</code> (mDNS) resolution — find the IP address from your router instead.</li>
+      </ul>
+    </section>
+
+    <footer class="page-footer">
+      Lab guide for Certificate III — Hardware and Operating System. Source and screenshots on <a href="https://github.com/mamishega/Installing-Raspberry-Pi-OS-Lite-on-a-Raspberry-Pi-Zero" target="_blank" rel="noopener">GitHub</a>.
+    </footer>
+  </main>
+</div>
+
+<script>
+  const toggle = document.getElementById('navToggle');
+  const sidebar = document.getElementById('sidebar');
+  toggle.addEventListener('click', () => sidebar.classList.toggle('open'));
+  sidebar.querySelectorAll('a').forEach(a => a.addEventListener('click', () => sidebar.classList.remove('open')));
+</script>
+
+</body>
+</html>

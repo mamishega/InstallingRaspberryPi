@@ -1,10 +1,6 @@
 # Lab Guide: Installing Raspberry Pi OS Lite on a Raspberry Pi Zero
 
-## Objective
 
-To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero / Zero W / Zero 2 W**, using the **Raspberry Pi Imager** tool, then complete Wi-Fi and SSH setup manually with `raspi-config` so the Pi can be used headlessly from then on.
-
----
 
 ## Phase 1: What You Need
 
@@ -16,7 +12,7 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 - Wi-Fi network details (SSID and password), if using a wireless model
 - Internet access on your computer to download the imaging tool
 
-> **Why "Lite"?** Raspberry Pi OS Lite has no desktop environment. It is ideal for the Pi Zero because of its limited RAM and CPU, and it is well suited to headless projects (servers, IoT devices, sensors).
+
 
 ---
 
@@ -60,6 +56,8 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 ![Selecting Raspberry Pi OS Lite (32-bit)](imager/3.png)
 
 *"Raspberry Pi OS Lite (32-bit)" is a port of Debian with **no desktop environment** — just a command-line system. This keeps RAM and CPU usage low, which suits the Pi Zero's limited hardware.*
+> **Why "Lite"?** Raspberry Pi OS Lite has no desktop environment. It is ideal for the Pi Zero because of its limited RAM and CPU, and it is well suited to headless projects (servers, IoT devices, sensors).
+
 
    > The Pi Zero's ARM11/ARM Cortex-A53 processor is 32-bit friendly, so the **32-bit** build is the standard recommended choice, even on the Zero 2 W.
 
@@ -81,7 +79,7 @@ To flash **Raspberry Pi OS Lite** onto a microSD card for a **Raspberry Pi Zero 
 
 After Storage, the wizard moves into the **Customisation** section. Here you set the Pi's hostname, locale, and login so it's ready to log into from the very first boot. Each item below is its own page in the sidebar, but they're all part of the same **Customisation** step.
 
-> **Note:** Wi-Fi and SSH are deliberately left disabled in this step — you'll enable them yourself afterwards using `raspi-config` (Phase 6), as practice with headless administration from the command line. Until then, the Pi needs a monitor and keyboard connected directly (see Phase 6).
+
 
 ### Hostname
 
@@ -111,6 +109,8 @@ After Storage, the wizard moves into the **Customisation** section. Here you set
 *Create a login **username** and **password** for the Pi. Do not leave this on the old default (`pi`/`raspberry`) — recent Raspberry Pi OS versions no longer ship a default account at all, so you must set one here or you won't be able to log in. The username must be lowercase and contain only letters, numbers, underscores, and hyphens.*
 
 ### Wi-Fi
+
+> **Note:** Wi-Fi and SSH are deliberately left disabled in this step — you'll enable them yourself afterwards using `raspi-config` (Phase 6), as practice with headless administration from the command line. Until then, the Pi needs a monitor and keyboard connected directly (see Phase 6).
 
 ![Configuring Wi-Fi](imager/8.png)
 
@@ -188,10 +188,10 @@ Because Wi-Fi and SSH were left disabled in Phase 4, the Pi needs a **monitor an
    ```
 
    ![Launching raspi-config](raspi-config/1.png)
-   
+
    *Run `sudo raspi-config` and enter your password when prompted for `sudo`.*
 
-3. This opens a blue-and-white text menu — navigate with the **arrow keys**, select with **Enter**, and go back with **Tab**/**Esc**.
+2. This opens a blue-and-white text menu — navigate with the **arrow keys**, select with **Enter**, and go back with **Tab**/**Esc**.
 
 ### Step 3: Set the Wireless LAN Country
 
@@ -296,7 +296,6 @@ Set this **before** connecting to Wi-Fi — an incorrect or unset country code c
    For example, connecting by hostname:
 
    ![Connecting via SSH using the hostname](raspi-config/14.png)
-   
    *`ssh user1@mohammed.local` from the computer's terminal.*
 
    > **The first time** you connect to a given Pi, SSH will warn that "the authenticity of host ... can't be established" and show a key fingerprint. This is normal — it's SSH's way of asking you to trust this device since it's never seen it before. Type **yes** to continue, then enter the password when prompted. SSH remembers this device afterwards and won't ask again unless the Pi's identity changes (e.g. after re-flashing the SD card).
@@ -304,7 +303,6 @@ Set this **before** connecting to Wi-Fi — an incorrect or unset country code c
    Or connecting by IP address:
 
    ![Connecting via SSH using the IP address](raspi-config/13.png)
-   
    *`ssh user1@192.168.20.34` from the computer's terminal, then enter the password when prompted.*
 
    > If `<hostname>.local` does not resolve, use the IP address instead. If that address has since changed (e.g. the Pi got a new DHCP lease after rebooting), run `ip a` again on the Pi (via monitor/keyboard) or check your router's device list for the current one.
